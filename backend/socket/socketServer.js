@@ -1,8 +1,8 @@
+
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
 const Message = require("../models/Message");
 
-// userId -> Set of socket ids (a user can have multiple tabs/devices open)
 const onlineUsers = new Map();
 
 function addSocket(userId, socketId) {
@@ -17,12 +17,26 @@ function removeSocket(userId, socketId) {
   if (sockets.size === 0) onlineUsers.delete(userId);
 }
 
+const vercelPreviewPattern = /^https:\/\/mern-chat-app-ufc5(-[a-z0-9]+)?-flower-shop1\.vercel\.app$/;
+
 function initSocket(httpServer, clientUrl) {
   const io = new Server(httpServer, {
-    cors: { origin: clientUrl, credentials: true },
+    cors: {
+      origin: (origin, callback) => {
+        if (
+          !origin ||
+          origin === clientUrl ||
+          origin === "http://localhost:5173" ||
+          vercelPreviewPattern.test(origin)
+        ) {
+          return callback(null, true);
+        }
+        callback(new Error(`Not allowed by CORS: ${origin}`));
+      },
+      credentials: true,
+    },
   });
 
-  // Every connecting socket must present a valid JWT, same as REST auth.
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
     if (!token) return next(new Error("No auth token provided"));
@@ -40,9 +54,7 @@ function initSocket(httpServer, clientUrl) {
     const userId = socket.userId;
     addSocket(userId, socket.id);
 
-    // Tell everyone this user just came online
     io.emit("presence:update", { userId, online: true });
-    // Send the full online list to the user who just connected
     socket.emit("presence:list", Array.from(onlineUsers.keys()));
 
     socket.on("message:send", async ({ receiverId, text }, ack) => {
@@ -57,7 +69,6 @@ function initSocket(httpServer, clientUrl) {
           text: text.trim(),
         });
 
-        // Deliver to every open tab/device of the receiver, if online
         const receiverSockets = onlineUsers.get(receiverId);
         if (receiverSockets) {
           receiverSockets.forEach((sid) => {
@@ -65,7 +76,6 @@ function initSocket(httpServer, clientUrl) {
           });
         }
 
-        // Echo back to every tab/device of the sender for a consistent view
         const senderSockets = onlineUsers.get(userId);
         senderSockets?.forEach((sid) => {
           io.to(sid).emit("message:new", message);
@@ -103,3 +113,6 @@ function initSocket(httpServer, clientUrl) {
 }
 
 module.exports = initSocket;
+
+        
+
