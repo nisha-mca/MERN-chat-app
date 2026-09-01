@@ -7,7 +7,7 @@ function formatTime(dateStr) {
   return new Date(dateStr).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-export default function ChatWindow({ activeUser, messages, onSend }) {
+export default function ChatWindow({ activeUser, messages, onSend, onBack }) {
   const { user } = useAuth();
   const { onlineUserIds, typingUserIds } = useSocket();
   const bottomRef = useRef(null);
@@ -18,7 +18,7 @@ export default function ChatWindow({ activeUser, messages, onSend }) {
 
   if (!activeUser) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-ink">
+      <div className="flex-1 hidden md:flex items-center justify-center bg-ink">
         <p className="text-textDim font-mono text-sm">Pick a conversation to start chatting.</p>
       </div>
     );
@@ -29,9 +29,16 @@ export default function ChatWindow({ activeUser, messages, onSend }) {
 
   return (
     <div className="flex-1 flex flex-col bg-ink min-w-0">
-      <div className="px-5 py-4 border-b border-line flex items-center gap-3">
+      <div className="px-3 md:px-5 py-4 border-b border-line flex items-center gap-3">
+        <button
+          onClick={onBack}
+          className="md:hidden text-textDim hover:text-text -ml-1 px-1 text-xl leading-none"
+          aria-label="Back to conversations"
+        >
+          ‹
+        </button>
         <span
-          className="w-9 h-9 rounded-full flex items-center justify-center text-ink text-sm font-semibold"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-ink text-sm font-semibold shrink-0"
           style={{ backgroundColor: activeUser.avatarColor }}
         >
           {activeUser.username[0].toUpperCase()}
@@ -44,7 +51,7 @@ export default function ChatWindow({ activeUser, messages, onSend }) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-3 md:px-5 py-4 space-y-3">
         {messages.length === 0 && (
           <p className="text-textDim text-sm text-center mt-8">
             No messages yet. Say hello to {activeUser.username}.
@@ -74,3 +81,6 @@ export default function ChatWindow({ activeUser, messages, onSend }) {
     </div>
   );
 }
+
+      
+        
