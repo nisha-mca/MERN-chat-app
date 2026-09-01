@@ -6,10 +6,14 @@ export default function Sidebar({ users, activeUser, onSelect, unreadCounts }) {
   const { onlineUserIds } = useSocket();
 
   return (
-    <div className="w-72 shrink-0 bg-surface border-r border-line flex flex-col h-full">
+    <div
+      className={`w-full md:w-72 md:shrink-0 bg-surface md:border-r border-line flex-col h-full ${
+        activeUser ? "hidden md:flex" : "flex"
+      }`}
+    >
       <div className="px-4 py-4 border-b border-line flex items-center justify-between">
         <h1 className="font-mono text-lg text-text font-bold">
-         Livewire<span className="text-accent">_</span>
+          wire<span className="text-accent">_</span>
         </h1>
         <button
           onClick={logout}
@@ -80,3 +84,5 @@ export default function Sidebar({ users, activeUser, onSelect, unreadCounts }) {
     </div>
   );
 }
+        
+            
