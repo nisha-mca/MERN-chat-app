@@ -1,4 +1,4 @@
-# wire — real-time MERN chat app
+# Livewire — real-time MERN chat app
 
 A minimal but complete real-time chat app: React frontend, Express + MongoDB backend,
 Socket.io for live messaging, presence, and typing indicators. JWT-based auth.
@@ -7,8 +7,8 @@ Socket.io for live messaging, presence, and typing indicators. JWT-based auth.
 
 ```
 mern-chat-app/
-├── server/     Express API + Socket.io server
-└── client/     React (Vite) frontend
+├── backend/     Express API + Socket.io server
+└── Fromtend/     React (Vite) frontend
 ```
 
 ## Features
@@ -27,7 +27,7 @@ mern-chat-app/
 ### 1. Backend
 
 ```bash
-cd server
+cd backend
 cp .env.example .env
 # edit .env: set MONGO_URI to your MongoDB connection string, and JWT_SECRET to a random string
 npm install
@@ -42,7 +42,7 @@ The server runs on `http://localhost:5000` by default.
 ### 2. Frontend
 
 ```bash
-cd client
+cd Fromtend
 cp .env.example .env
 npm install
 npm run dev
