@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -14,7 +15,25 @@ const server = http.createServer(app);
 
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+const vercelPreviewPattern = /^https:\/\/mern-chat-app-ufc5(-[a-z0-9]+)?-flower-shop1\.vercel\.app$/;
+
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (origin === CLIENT_URL) return true;
+  if (origin === "http://localhost:5173") return true;
+  if (vercelPreviewPattern.test(origin)) return true;
+  return false;
+}
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) return callback(null, true);
+      callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
@@ -25,7 +44,6 @@ app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 connectDB().then(() => {
   initSocket(server, CLIENT_URL);
-
   const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
