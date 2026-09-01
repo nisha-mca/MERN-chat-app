@@ -12,7 +12,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const app = express();
 const server = http.createServer(app);
 
-const CLIENT_URL = process.env.CLIENT_URL || "https://mern-chat-app-1-frontend.onrender.com";
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
 app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(express.json());

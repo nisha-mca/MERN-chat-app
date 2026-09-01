@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 
 const SocketContext = createContext(null);
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "https://mern-chat-app-vi9x.onrender.com";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
 
 export function SocketProvider({ children }) {
   const { token, user } = useAuth();
