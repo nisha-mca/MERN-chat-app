@@ -29,7 +29,7 @@ export default function Login() {
       <div className="w-full max-w-sm">
         <div className="mb-8">
           <h1 className="font-mono text-2xl text-text font-bold tracking-tight">
-            wire<span className="text-accent">_</span>
+           Livewire<span className="text-accent">_</span>
           </h1>
           <p className="text-textDim text-sm mt-1">Sign in to keep talking.</p>
         </div>
