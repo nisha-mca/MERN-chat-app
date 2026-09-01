@@ -13,7 +13,6 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
 
-  // Load the contact list and unread badge counts once on mount
   useEffect(() => {
     api.get("/users").then((res) => setUsers(res.data));
     refreshUnread();
@@ -35,7 +34,6 @@ export default function Chat() {
     setUnreadCounts((prev) => ({ ...prev, [u._id]: 0 }));
   }, []);
 
-  // Listen for incoming messages in real time
   useEffect(() => {
     if (!socket) return;
 
@@ -70,14 +68,19 @@ export default function Chat() {
   }
 
   return (
-    <div className="h-screen flex">
+    <div className="h-screen flex overflow-hidden">
       <Sidebar
         users={users}
         activeUser={activeUser}
         onSelect={selectUser}
         unreadCounts={unreadCounts}
       />
-      <ChatWindow activeUser={activeUser} messages={messages} onSend={sendMessage} />
+      <ChatWindow
+        activeUser={activeUser}
+        messages={messages}
+        onSend={sendMessage}
+        onBack={() => setActiveUser(null)}
+      />
     </div>
   );
 }
