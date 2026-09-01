@@ -9,7 +9,7 @@ export default function Sidebar({ users, activeUser, onSelect, unreadCounts }) {
     <div className="w-72 shrink-0 bg-surface border-r border-line flex flex-col h-full">
       <div className="px-4 py-4 border-b border-line flex items-center justify-between">
         <h1 className="font-mono text-lg text-text font-bold">
-          wire<span className="text-accent">_</span>
+         Livewire<span className="text-accent">_</span>
         </h1>
         <button
           onClick={logout}
